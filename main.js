@@ -1,16 +1,36 @@
-const prompt = require("prompt-sync")(); //npm install prompt-sync
+import Prompt from "prompt-sync"; //npm install prompt-sync
 
-const BOARD_SIZE = 11;
+import {
+  BOARD_SIZE,
+  EXIT_CODE,
+  EMPTY_CELL,
+  PLAYER_1,
+  PLAYER_2,
+} from "./consts.js";
+import { DisjointSet } from "./DisjointSet.js";
 
-const EXIT_CODE = -999;
-const EMPTY_CELL = 0;
-const PLAYER_1 = 1;
-const PLAYER_2 = 2;
+const prompt = Prompt();
 
-const createingNewBoard = () => {
-  return Array.from({ length: BOARD_SIZE }, () =>
-    Array(BOARD_SIZE).fill(EMPTY_CELL)
-  );
+export const extractNumbersFromString = (str) => str.match(/\d+/g).map(Number);
+
+const getIJstring = (i, j) => `[${i},${j}]`;
+
+const convertMatrixIndexToArrayIndex = (i, j, n = BOARD_SIZE) => i * n + j;
+
+const createingNewBoard = (n) => {
+  const matrix = [];
+  const elements = [];
+
+  for (let i = 0; i < n; i++) {
+    const row = [];
+    for (let j = 0; j < n; j++) {
+      row.push(0);
+      elements.push(getIJstring(i, j));
+    }
+    matrix.push(row);
+  }
+
+  return [matrix, elements];
 };
 
 const printMatrix = (matrix) => {
@@ -18,8 +38,6 @@ const printMatrix = (matrix) => {
     console.log(row.join(" "));
   }
 };
-
-const BOARD = createingNewBoard();
 
 const isEmptyCell = (board, i, j) => board[i][j] == EMPTY_CELL;
 
@@ -91,7 +109,47 @@ const printEndMessage = (winner) => {
   }
 };
 
-const Game = (board) => {
+const getAdjacentCells = (i, j) => {
+  const adjacentCells = [
+    [i + 1, j],
+    [i + 1, j - 1],
+    [i, j + 1],
+    [i, j - 1],
+    [i - 1, j],
+    [i - 1, j + 1],
+  ];
+
+  return adjacentCells.filter((cell) => !isOutOfTheBoard(cell[0], cell[1]));
+};
+
+//O(log(n))
+const checkForWinner = (board, disjointSet, i, j) => {
+  const adjacentCells = getAdjacentCells(i, j); //6 items maxium
+
+  const player = board[i][j];
+  const currIJstring = getIJstring(i, j);
+  for (const adjacentCell of adjacentCells) {
+    //six iterates maximum O(1)
+    const [iValue, jValue] = adjacentCell;
+    if (player == board[iValue][jValue]) {
+      disjointSet.union(currIJstring, getIJstring(iValue, jValue)); //O(log(n))
+      const groupKey = disjointSet.find(currIJstring); //O(log(n))
+      const edges = disjointSet.edges[groupKey];
+      if (player == PLAYER_1 && edges.isRight && edges.isLeft) {
+        return PLAYER_1;
+      }
+      if (player == PLAYER_2 && edges.isTop && edges.isBottom) {
+        return PLAYER_2;
+      }
+    }
+  }
+
+  return 0;
+};
+
+const Game = () => {
+  const [board, elements] = createingNewBoard(BOARD_SIZE);
+  const disjointSet = new DisjointSet(elements);
   printStartGameMessage();
 
   let player = PLAYER_1;
@@ -114,11 +172,16 @@ const Game = (board) => {
       }
     }
 
-    board[move.i][move.j] = player == PLAYER_1 ? PLAYER_1 : PLAYER_2;
+    const { i, j } = move;
+
+    board[i][j] = player == PLAYER_1 ? PLAYER_1 : PLAYER_2;
+
+    winner = checkForWinner(board, disjointSet, i, j);
+
     player = (player % 2) + 1;
   }
 
   printEndMessage(winner);
 };
 
-Game(BOARD);
+Game();
