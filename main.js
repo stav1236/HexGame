@@ -27,7 +27,16 @@ const isOutOfTheBoard = (i, j) =>
   i < 0 || j < 0 || i >= BOARD_SIZE || j >= BOARD_SIZE;
 
 const isLegalMove = (board, i, j) => {
-  return !isOutOfTheBoard(i, j) && isEmptyCell(board, i, j);
+  if (isOutOfTheBoard(i, j)) {
+    console.log("Cannot select a cell outside the board");
+    return false;
+  }
+  if (!isEmptyCell(board, i, j)) {
+    console.log("A full cell cannot be selected");
+    return false;
+  }
+
+  return true;
 };
 
 const checkIsNumber = (num) => {
@@ -36,28 +45,31 @@ const checkIsNumber = (num) => {
   }
 };
 
+const intInput = (message = "enter integer") => {
+  let i;
+  while (!i && i != 0) {
+    i = parseInt(prompt(message));
+    checkIsNumber(i);
+  }
+  console.log("value is: " + i);
+
+  return i;
+};
+
 const inputMove = () => {
   let isIlegalInput = false;
   let i, j;
   while (!isIlegalInput) {
-    while (!i) {
-      i = parseInt(prompt("Enter the value of i: "));
-      checkIsNumber(i);
-    }
+    i = intInput("Enter the value of i: ");
     if (i == EXIT_CODE) return EXIT_CODE;
-    console.log("i value is: " + i);
 
-    while (!j) {
-      j = parseInt(prompt("Enter the value of j: "));
-      checkIsNumber(j);
-    }
+    j = intInput("Enter the value of j: ");
     if (j == EXIT_CODE) return EXIT_CODE;
-    console.log("j value is: " + j);
 
     isIlegalInput = true;
   }
 
-  console.log(`your move is + [${i}, ${j}]`);
+  console.log(`your move is [${i}, ${j}]`);
 
   return { i: Number(i), j: Number(j) };
 };
@@ -82,15 +94,28 @@ const printEndMessage = (winner) => {
 const Game = (board) => {
   printStartGameMessage();
 
+  let player = PLAYER_1;
   let winner = 0;
   while (winner == 0) {
-    const mover = inputMove();
-    if (mover == EXIT_CODE) {
-      winner = EXIT_CODE;
-      break;
+    console.log(`Is Player${player} Turn`);
+    console.log("The current board is:");
+    printMatrix(board);
+
+    let move;
+    let isValidMove = false;
+    while (!isValidMove) {
+      move = inputMove();
+      if (move == EXIT_CODE) {
+        winner = EXIT_CODE;
+        printEndMessage(winner);
+        return;
+      } else {
+        isValidMove = isLegalMove(board, move.i, move.j);
+      }
     }
 
-    winner = PLAYER_1;
+    board[move.i][move.j] = player == PLAYER_1 ? PLAYER_1 : PLAYER_2;
+    player = (player % 2) + 1;
   }
 
   printEndMessage(winner);
