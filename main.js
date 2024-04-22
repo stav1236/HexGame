@@ -1,6 +1,6 @@
 const prompt = require("prompt-sync")(); //npm install prompt-sync
 
-const BOARD_SIZE = 7;
+const BOARD_SIZE = 11;
 
 const EXIT_CODE = -999;
 const EMPTY_CELL = 0;
