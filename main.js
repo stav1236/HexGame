@@ -15,8 +15,6 @@ export const extractNumbersFromString = (str) => str.match(/\d+/g).map(Number);
 
 const getIJstring = (i, j) => `[${i},${j}]`;
 
-const convertMatrixIndexToArrayIndex = (i, j, n = BOARD_SIZE) => i * n + j;
-
 const createingNewBoard = (n) => {
   const matrix = [];
   const elements = [];

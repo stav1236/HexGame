@@ -3,7 +3,6 @@ import { extractNumbersFromString } from "./main.js";
 
 export class DisjointSet {
   constructor(elems) {
-    this.elems = elems;
     this.parent = {};
     this.size = {};
     this.edges = {};
