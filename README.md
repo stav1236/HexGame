@@ -1,5 +1,33 @@
 # HexGame
 
+## Table of content
+
+- [HexGame](#hexgame)
+  * [Overview](#overview)
+  * [Description](#description)
+  * [Usage](#usage)
+    + [Prerequisites](#prerequisites)
+    + [Running the Project](#running-the-project)
+      - [Clone the repository](#clone-the-repository)
+      - [Navigate to the HexGame folder](#navigate-to-the-hexgame-folder)
+      - [Install dependencies](#install-dependencies)
+      - [Run the project](#run-the-project)
+  * [Implementation](#implementation)
+    + [consts.js](#constsjs)
+      - [Constants](#constants)
+    + [DisjointSet Class](#disjointset-class)
+      - [Variables](#variables)
+      - [Functions](#functions)
+    + [main.js](#mainjs)
+      - [Board Representation](#board-representation)
+      - [Hex Shape Neighbors](#hex-shape-neighbors)
+      - [Functions](#functions-1)
+      - [`checkForWinner(board, disjointSet, i, j)`](#-checkforwinner-board--disjointset--i--j--)
+      - [Parameters](#parameters)
+      - [Functionality](#functionality)
+      - [Complexity](#complexity)
+  * [License](#license)
+
 ## Overview
 
 A hex game is a strategic board game played on a hexagonal grid. Players take turns placing pieces to create a connected path from one side to the other. It's a challenging game of tactics and planning.
