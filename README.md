@@ -30,7 +30,7 @@ git clone https://github.com/stav1236/HexGame.git
 cd HexGame
 ```
 
-#### Install dependencies::
+#### Install dependencies:
 
 ```bash
 npm i
