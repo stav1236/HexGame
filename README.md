@@ -22,7 +22,7 @@
       - [Board Representation](#board-representation)
       - [Hex Shape Neighbors](#hex-shape-neighbors)
       - [Functions](#functions-1)
-      - [`checkForWinner(board, disjointSet, i, j)`](#-checkforwinner-board--disjointset--i--j--)
+      - [`checkForWinner(board, disjointSet, i, j)`](#checkforwinnerboard-disjointset-i-j)
       - [Parameters](#parameters)
       - [Functionality](#functionality)
       - [Complexity](#complexity)
